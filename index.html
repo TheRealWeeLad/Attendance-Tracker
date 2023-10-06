@@ -4,12 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Point Tracker</title>
+
+    <!-- BOOTSTRAP -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    
     <link rel='stylesheet' href='index.css'>
 </head>
 <body>
+    <div id="table-div">
+        <table id="attendance-table">
+            <tr id="dates"></tr>
+        </table>
+    </div>
+
+    <div class='popup' id="add-person-div">
+        <label id="name-label" for="name-inp">Name:</label>
+        <input id="name-inp">
+
+        <div id="date-inputs" class="container">
+            <div class="row label-row"></div>
+            <div class="row input-row"></div>
+        </div>
+
+        <button id="add-name-button">Add</button>
+        <button id="cancel-name">Cancel</button>
+    </div>
+    <div class="popup" id="add-date-div">
+        <label id="date-label" for="date-inp">Date:</label>
+        <input id="date-inp">
+
+        <div id="name-inputs" class="container">
+            <div class="row label-row"></div>
+            <div class="row input-row"></div>
+        </div>
+
+        <button id="add-date-button">Add</button>
+        <button id="cancel-date">Cancel</button>
+    </div>
+
+    <button id="add-person">Add Person</button>
+    <button id="export">Export</button>
+    <button id="add-date">Add Date</button>
+
     <script type="module" src='index.js'></script>
-    <table id="attendance-table">
-        <tr id="dates"></tr>
-    </table>
 </body>
 </html>
