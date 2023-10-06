@@ -22,7 +22,7 @@ window.onload = () => {
 
         // Create Date Inputs
         let dates_tr = document.getElementById('dates');
-        let num_dates = dates_tr.children.length - 2;
+        let num_dates = dates_tr.children.length - 3;
         let label_row = date_inputs.children.item(0);
         let input_row = date_inputs.children.item(1);
         for (let i = 1; i < num_dates + 1; i++) {
@@ -144,6 +144,9 @@ window.onload = () => {
         point_td.textContent = points;
         tr.appendChild(point_td);
 
+        // Remove Button
+        add_remove_button(tr);
+
         table.appendChild(tr);
 
         // Reset new date list
@@ -162,6 +165,23 @@ window.onload = () => {
     function export_users() {
         alert(JSON.stringify(users));
         console.log(JSON.stringify(users));
+    }
+    function remove(row) {
+        let name = row.children.item(0).textContent;
+        table.removeChild(row);
+
+        delete users[name];
+    }
+
+    // Helper functions
+    function add_remove_button(tr) {
+        let remove_td = document.createElement('td');
+        let remove_button = document.createElement('img');
+        remove_button.src = './x.png';
+        remove_button.className = 'remove-img';
+        remove_button.addEventListener('click', () => remove(tr));
+        remove_td.appendChild(remove_button);
+        tr.appendChild(remove_td);
     }
 
     // Set button listeners
@@ -194,6 +214,9 @@ window.onload = () => {
     let total_header = document.createElement('td');
     total_header.textContent = 'Total Points';
     dates_tr.appendChild(total_header);
+    let remove_header = document.createElement('td');
+    remove_header.textContent = 'Remove';
+    dates_tr.appendChild(remove_header);
     // Set People
     let keys = Object.keys(users);
     for (let i = 0; i < keys.length; i++) {
@@ -218,6 +241,9 @@ window.onload = () => {
         let point_td = document.createElement('td');
         point_td.textContent = points;
         tr.appendChild(point_td);
+
+        // Remove Button
+        add_remove_button(tr);
         
         table.appendChild(tr);
     }
