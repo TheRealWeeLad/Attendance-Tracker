@@ -127,3 +127,15 @@ button {
     width: 25%;
     cursor: pointer;
 }
+.plus-img, .minus-img {
+    width: 10%;
+    cursor: pointer;
+    display: inline-block;
+    margin-left: 15%;
+    margin-right: 15%;
+}
+
+/* P */
+.point-value {
+    display: inline-block;
+}

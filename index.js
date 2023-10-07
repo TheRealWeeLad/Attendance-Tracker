@@ -159,8 +159,43 @@ window.onload = () => {
         }
         users[name] = user;
     }
+    let date_inp = document.getElementById('date-inp');
     function add_date() {
+        date_showing = false;
+        date_popup.style.display = 'none';
 
+        // Add Date Header
+        let date_header = document.createElement('td');
+        let date_value = date_inp.value;
+        if (!validDate(date_value)) {
+            alert('Error: Invalid Date');
+            return;
+        }
+        date_header.textContent = date_value;
+
+        // Add Point Values
+        for (let i = 1; i < table.children.length; i++) {
+            let row = table.children.item(i);
+            let points_td = row.children.item(row.children.length - 2);
+
+            let date_points = document.createElement('td');
+            let points = parseInt(new_date_points[i - 1].value);
+            if (isNaN(points)) {
+                alert('Error: Invalid Point Values');
+                return;
+            }
+            date_points.textContent = points;
+
+            row.insertBefore(date_points, points_td);
+
+            // Update users
+            let name = row.children.item(0).textContent;
+            users[name][date_value] = points;
+        }
+
+        let header_row = table.children.item(0).children.item(0);
+        let remove_header = header_row.children.item(header_row.children.length - 2);
+        header_row.insertBefore(date_header, remove_header);
     }
     function export_users() {
         alert(JSON.stringify(users));
@@ -172,16 +207,52 @@ window.onload = () => {
 
         delete users[name];
     }
+    // param add: bool -> whether to add or subtract
+    function add_points(row, td, date, add) {
+        let original_points = parseInt(td.textContent);
+        if (!add && original_points === 0) return;
+        let negative = add ? 1 : -1;
+        let new_points = original_points + negative * 5;
+        td.childNodes.item(1).textContent = new_points;
+
+        // Update total points
+        let total_points_td = row.children.item(row.children.length - 2);
+        let total_points = parseInt(total_points_td.textContent);
+        total_points_td.textContent = total_points + negative * 5;
+
+        // Update users
+        let name = row.children.item(0).textContent;
+        users[name][date] = new_points;
+    }
 
     // Helper functions
     function add_remove_button(tr) {
         let remove_td = document.createElement('td');
         let remove_button = document.createElement('img');
-        remove_button.src = './x.png';
+        remove_button.src = 'x.png';
         remove_button.className = 'remove-img';
         remove_button.addEventListener('click', () => remove(tr));
         remove_td.appendChild(remove_button);
         tr.appendChild(remove_td);
+    }
+    const month_days = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    function validDate(date) {
+        try {
+            date = date.split('/');
+            if (date.length != 2) return false;
+            let month = parseInt(date[0]);
+            if (isNaN(month)) return false;
+            let day = parseInt(date[1]);
+            if (isNaN(day)) return false;
+
+            if (month < 1 || month > 12) return false;
+            if (day < 1 || day > month_days[month]) return false;
+
+            return true;
+        }
+        catch (e) {
+            return false;
+        }
     }
 
     // Set button listeners
@@ -197,6 +268,8 @@ window.onload = () => {
     add_name_button.addEventListener('click', add_name);
     let export_button = document.getElementById('export');
     export_button.addEventListener('click', export_users);
+    let add_date_button = document.getElementById('add-date-button');
+    add_date_button.addEventListener('click', add_date);
 
     // Create table from users
     // Set dates
@@ -232,9 +305,29 @@ window.onload = () => {
         let points = 0;
         for (let j = 0; j < dates.length; j++) {
             let date_td = document.createElement('td');
+
+            // Subtract Button
+            let minus_img = document.createElement('img');
+            minus_img.src = 'minus.png';
+            minus_img.className = 'minus-img';
+            minus_img.addEventListener('click', () => add_points(tr, date_td, dates[j], false));
+            date_td.appendChild(minus_img);
+
+            // Point Value
             let point = person[dates[j]];
             points += point;
-            date_td.textContent = point;
+            let p = document.createElement('p');
+            p.textContent = point;
+            p.className = 'point-value';
+            date_td.appendChild(p);
+
+            // Add Button
+            let plus_img = document.createElement('img');
+            plus_img.src = 'plus.png';
+            plus_img.className = 'plus-img';
+            plus_img.addEventListener('click', () => add_points(tr, date_td, dates[j], true));
+            date_td.appendChild(plus_img);
+            
             tr.appendChild(date_td);
         }
         // Total Points
