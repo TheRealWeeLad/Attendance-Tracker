@@ -9,6 +9,8 @@ window.onload = () => {
 
     let name_showing = false;
     let date_showing = false;
+    
+    const NUM_NAMES_PER_ROW = 10;
 
     // Button click functions
     let new_dates = [];
@@ -62,20 +64,26 @@ window.onload = () => {
 
         // Clear Name Inputs
         name_inputs.innerHTML = `<div class="row label-row"></div>
+        <div class="row input-row"></div><div class="row label-row"></div>
+        <div class="row input-row"></div><div class="row label-row"></div>
         <div class="row input-row"></div>`
 
         // Create Name Inputs
         let num_names = Object.keys(users).length;
         let label_row = name_inputs.children.item(0);
         let input_row = name_inputs.children.item(1);
+        let label_row_2 = name_inputs.children.item(2);
+        let input_row_2 = name_inputs.children.item(3);
+        let label_row_3 = name_inputs.children.item(4);
+        let input_row_3 = name_inputs.children.item(5);
         for (let i = 1; i < num_names + 1; i++) {
             // column div
             let label_div = document.createElement('div');
-            label_div.className = 'col';
-            let margin = `${(i - 1) / num_names * 100}%`;
+            label_div.className = 'col-sm';
+            let margin = `${(i - 1) % NUM_NAMES_PER_ROW / NUM_NAMES_PER_ROW * 100}%`;
             label_div.style.marginLeft = margin;
             let input_div = document.createElement('div');
-            input_div.className = 'col';
+            input_div.className = 'col-sm';
             input_div.style.marginLeft = margin;
 
             let label = document.createElement('label');
@@ -85,14 +93,24 @@ window.onload = () => {
 
             let input = document.createElement('input');
             input.className = 'stackable-input';
-            input.style.left = `${15 + (i - 1) / num_names * 70}%`;
+            input.style.left = `${10 + (i - 1) % NUM_NAMES_PER_ROW / NUM_NAMES_PER_ROW * 80}%`;
             input.id = `date-inp-${i}`;
             new_date_points[i - 1] = input;
 
             label_div.appendChild(label);
             input_div.appendChild(input);
-            label_row.appendChild(label_div);
-            input_row.appendChild(input_div);
+            if (i <= NUM_NAMES_PER_ROW) {
+                label_row.appendChild(label_div);
+                input_row.appendChild(input_div);
+            }
+            else if (i <= NUM_NAMES_PER_ROW * 2) {
+                label_row_2.appendChild(label_div);
+                input_row_2.appendChild(input_div);
+            }
+            else {
+                label_row_3.appendChild(label_div);
+                input_row_3.appendChild(input_div);
+            }
         }
 
         date_showing = true;
@@ -129,15 +147,34 @@ window.onload = () => {
         let point_values = [];
         for (let i = 0; i < new_dates.length; i++) {
             let date_td = document.createElement('td');
-            let point_value = new_dates[i].value;
-            let point_int = parseInt(point_value);
-            point_values[i] = point_int;
-            if (isNaN(point_int)) {
+            
+            // Subtract Button
+            let minus_img = document.createElement('img');
+            minus_img.src = 'minus.png';
+            minus_img.className = 'minus-img';
+            minus_img.addEventListener('click', () => add_points(tr, date_td, dates[i], false));
+            date_td.appendChild(minus_img);
+
+            // Point Value
+            let point_value = parseInt(new_dates[i].value);
+            point_values[i] = point_value;
+            if (isNaN(point_value)) {
                 alert('Error: Not a Number');
                 return;
             }
-            date_td.textContent = point_value;
-            points += point_int;
+            points += point_value;
+            let p = document.createElement('p');
+            p.textContent = point_value;
+            p.className = 'point-value';
+            date_td.appendChild(p);
+
+            // Add Button
+            let plus_img = document.createElement('img');
+            plus_img.src = 'plus.png';
+            plus_img.className = 'plus-img';
+            plus_img.addEventListener('click', () => add_points(tr, date_td, dates[i], true));
+            date_td.appendChild(plus_img);
+            
             tr.appendChild(date_td);
         }
         let point_td = document.createElement('td');
@@ -224,6 +261,9 @@ window.onload = () => {
         let name = row.children.item(0).textContent;
         users[name][date] = new_points;
     }
+    function sort() {
+        
+    }
 
     // Helper functions
     function add_remove_button(tr) {
@@ -268,6 +308,8 @@ window.onload = () => {
     add_name_button.addEventListener('click', add_name);
     let export_button = document.getElementById('export');
     export_button.addEventListener('click', export_users);
+    let sort_button = document.getElementById('sort');
+    sort_button.addEventListener('click', sort);
     let add_date_button = document.getElementById('add-date-button');
     add_date_button.addEventListener('click', add_date);
 
@@ -341,4 +383,6 @@ window.onload = () => {
         table.appendChild(tr);
     }
 
+    // Sort table entries
+    sort();
 };

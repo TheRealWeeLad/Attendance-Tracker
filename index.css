@@ -56,11 +56,11 @@ label {
     top: 20%;
 }
 #date-inputs, #name-inputs {
-    width: 70%;
-    margin-left: 15%;
-    margin-top: 20%;
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 11%;
 }
-.col {
+.col-sm {
     margin-top: 5%;
     width: 100%;
 }
@@ -81,16 +81,18 @@ button {
     border-radius: 5px;
 }
 
+#add-person, #add-date, #export, #sort {
+    position: relative;
+    margin: 3% 2% 3% 2%;
+}
 #add-person {
     background-color: blue;
-    left: 5%;
 }
 #add-person:hover {
     background-color: #0000aa;
 }
 #add-date {
     background-color: #df1272;
-    right: 5%;
 }
 #add-date:hover {
     background-color: #df1272bc;
@@ -114,11 +116,16 @@ button {
     background-color: darkred;
 }
 #export {
-    left: 40%;
     background-color: green;
 }
 #export:hover {
     background-color: darkgreen;
+}
+#sort {
+    background-color: red;
+}
+#sort:hover {
+    background-color: darkred;
 }
 
 /* IMAGES */
