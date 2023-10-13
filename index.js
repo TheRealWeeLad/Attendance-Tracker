@@ -4,6 +4,7 @@ window.onload = () => {
     let name_popup = document.getElementById('add-person-div');
     let date_popup = document.getElementById('add-date-div');
     let table = document.getElementById("attendance-table");
+    let table_div = document.getElementById('table-div');
     let date_inputs = document.getElementById('date-inputs');
     let name_inputs = document.getElementById('name-inputs');
 
@@ -30,11 +31,11 @@ window.onload = () => {
         for (let i = 1; i < num_dates + 1; i++) {
             // column div
             let label_div = document.createElement('div');
-            label_div.className = 'col';
+            label_div.className = 'col-sm';
             let margin = `${(i - 1) / num_dates * 100}%`;
             label_div.style.marginLeft = margin;
             let input_div = document.createElement('div');
-            input_div.className = 'col';
+            input_div.className = 'col-sm';
             input_div.style.marginLeft = margin;
 
             let label = document.createElement('label');
@@ -44,7 +45,7 @@ window.onload = () => {
 
             let input = document.createElement('input');
             input.className = 'stackable-input';
-            input.style.left = `${15 + (i - 1) / num_dates * 70}%`;
+            input.style.left = `${10 + (i - 1) / num_dates * 80}%`;
             input.id = `name-inp-${i}`;
             new_dates[i - 1] = input;
 
@@ -195,6 +196,9 @@ window.onload = () => {
             user[dates[i]] = point_values[i];
         }
         users[name] = user;
+
+        // Sort Table
+        sort();
     }
     let date_inp = document.getElementById('date-inp');
     function add_date() {
@@ -214,14 +218,31 @@ window.onload = () => {
         for (let i = 1; i < table.children.length; i++) {
             let row = table.children.item(i);
             let points_td = row.children.item(row.children.length - 2);
-
             let date_points = document.createElement('td');
+
+            // Subtract Button
+            let minus_img = document.createElement('img');
+            minus_img.src = 'minus.png';
+            minus_img.className = 'minus-img';
+            minus_img.addEventListener('click', () => add_points(row, date_points, date_value, false));
+            date_points.appendChild(minus_img);
+
             let points = parseInt(new_date_points[i - 1].value);
             if (isNaN(points)) {
                 alert('Error: Invalid Point Values');
                 return;
             }
-            date_points.textContent = points;
+            let p = document.createElement('p');
+            p.textContent = points;
+            p.className = 'point-value';
+            date_points.appendChild(p);
+
+            // Add Button
+            let plus_img = document.createElement('img');
+            plus_img.src = 'plus.png';
+            plus_img.className = 'plus-img';
+            plus_img.addEventListener('click', () => add_points(row, date_points, date_value, true));
+            date_points.appendChild(plus_img);
 
             row.insertBefore(date_points, points_td);
 
@@ -233,6 +254,9 @@ window.onload = () => {
         let header_row = table.children.item(0).children.item(0);
         let remove_header = header_row.children.item(header_row.children.length - 2);
         header_row.insertBefore(date_header, remove_header);
+
+        // Sort table
+        sort();
     }
     function export_users() {
         alert(JSON.stringify(users));
@@ -262,7 +286,27 @@ window.onload = () => {
         users[name][date] = new_points;
     }
     function sort() {
-        
+        let new_table = document.createElement('table');
+        new_table.id = 'attendance-table';
+        new_table.appendChild(table.children.item(0)); // Add header row
+
+        const table_rows = [];
+        for (let i = 0; i < table.children.length; i++) {
+            table_rows.push(table.children.item(i));
+        }
+
+        table_rows.sort((a, b) => {
+            const a_points = a.childNodes[a.childNodes.length - 2];
+            const b_points = b.childNodes[b.childNodes.length - 2];
+            return parseInt(b_points.textContent) - parseInt(a_points.textContent);
+        })
+
+        table_rows.forEach((row) => {
+            new_table.appendChild(row);
+        })
+
+        table_div.replaceChild(new_table, table);
+        table = new_table;
     }
 
     // Helper functions
