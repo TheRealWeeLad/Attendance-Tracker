@@ -49,16 +49,16 @@ label {
     position: absolute;
 }
 #name-inp, #date-inp {
-    top: 20%;
+    top: 10%;
 }
 #name-label, #date-label {
     left: 30%;
-    top: 20%;
+    top: 9%;
 }
 #date-inputs, #name-inputs {
     width: 80%;
     margin-left: 10%;
-    margin-top: 20%;
+    margin-top: 10%;
 }
 .col-sm {
     margin-top: 5%;
@@ -69,6 +69,16 @@ label {
 }
 #add-date-div {
     display: none;
+}
+#export-div {
+    display: none;
+    color: black;
+}
+
+/* Text Area */
+textarea {
+    width: 100%;
+    height: 70%;
 }
 
 /* BUTTON */
@@ -120,6 +130,15 @@ button {
 }
 #export:hover {
     background-color: darkgreen;
+}
+#export-back {
+    right: 40%;
+    top: 85%;
+    background-color: red;
+    color: black;
+}
+#export-back:hover {
+    background-color: darkred;
 }
 #sort {
     background-color: red;

@@ -7,6 +7,7 @@ window.onload = () => {
     let table_div = document.getElementById('table-div');
     let date_inputs = document.getElementById('date-inputs');
     let name_inputs = document.getElementById('name-inputs');
+    let export_div = document.getElementById('export-div');
 
     let name_showing = false;
     let date_showing = false;
@@ -259,8 +260,14 @@ window.onload = () => {
         sort();
     }
     function export_users() {
-        alert(JSON.stringify(users));
+        const user_string = JSON.stringify(users);
+        export_div.style.display = 'block';
+        export_div.childNodes[1].textContent = user_string;
+
         console.log(JSON.stringify(users));
+    }
+    function cancel_export() {
+        export_div.style.display = 'none';
     }
     function remove(row) {
         let name = row.children.item(0).textContent;
@@ -352,6 +359,8 @@ window.onload = () => {
     add_name_button.addEventListener('click', add_name);
     let export_button = document.getElementById('export');
     export_button.addEventListener('click', export_users);
+    let export_back_button = document.getElementById('export-back');
+    export_back_button.addEventListener('click', cancel_export);
     let sort_button = document.getElementById('sort');
     sort_button.addEventListener('click', sort);
     let add_date_button = document.getElementById('add-date-button');
