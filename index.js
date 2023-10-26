@@ -373,10 +373,10 @@ window.onload = () => {
     name_header.textContent = "Names";
     dates_tr.appendChild(name_header);
 
-    let shaarav_keys = Object.keys(users["Shaarav Agrawal"]);
-    for (let i = 0; i < shaarav_keys.length; i++) {
+    let first_name_keys = Object.keys(users[Object.keys(users)[0]]);
+    for (let i = 0; i < first_name_keys.length; i++) {
         let date = document.createElement("td");
-        date.innerText = shaarav_keys[i];
+        date.innerText = first_name_keys[i];
         dates_tr.appendChild(date);
     }
     let total_header = document.createElement('td');
