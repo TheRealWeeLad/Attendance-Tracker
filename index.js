@@ -345,6 +345,11 @@ window.onload = () => {
             return false;
         }
     }
+    function expand() {
+        table.innerHTML = '<tr id="dates"></tr>';
+        setDates(false);
+        setPeople(false);
+    }
 
     // Set button listeners
     let show_name_button = document.getElementById('add-person');
@@ -368,73 +373,102 @@ window.onload = () => {
 
     // Create table from users
     // Set dates
-    let dates_tr = document.getElementById("dates");
-    let name_header = document.createElement('td');
-    name_header.textContent = "Names";
-    dates_tr.appendChild(name_header);
-
-    let first_name_keys = Object.keys(users[Object.keys(users)[0]]);
-    for (let i = 0; i < first_name_keys.length; i++) {
-        let date = document.createElement("td");
-        date.innerText = first_name_keys[i];
-        dates_tr.appendChild(date);
-    }
-    let total_header = document.createElement('td');
-    total_header.textContent = 'Total Points';
-    dates_tr.appendChild(total_header);
-    let remove_header = document.createElement('td');
-    remove_header.textContent = 'Remove';
-    dates_tr.appendChild(remove_header);
-    // Set People
-    let keys = Object.keys(users);
-    for (let i = 0; i < keys.length; i++) {
-        let tr = document.createElement('tr');
-        // Name
-        let name_td = document.createElement('td');
-        let name = keys[i];
-        name_td.innerText = name;
-        tr.appendChild(name_td);
-        // Dates
-        let person = users[name]
-        let dates = Object.keys(person);
-        let points = 0;
-        for (let j = 0; j < dates.length; j++) {
-            let date_td = document.createElement('td');
-
-            // Subtract Button
-            let minus_img = document.createElement('img');
-            minus_img.src = 'minus.png';
-            minus_img.className = 'minus-img';
-            minus_img.addEventListener('click', () => add_points(tr, date_td, dates[j], false));
-            date_td.appendChild(minus_img);
-
-            // Point Value
-            let point = person[dates[j]];
-            points += point;
-            let p = document.createElement('p');
-            p.textContent = point;
-            p.className = 'point-value';
-            date_td.appendChild(p);
-
-            // Add Button
-            let plus_img = document.createElement('img');
-            plus_img.src = 'plus.png';
-            plus_img.className = 'plus-img';
-            plus_img.addEventListener('click', () => add_points(tr, date_td, dates[j], true));
-            date_td.appendChild(plus_img);
-            
-            tr.appendChild(date_td);
+    function setDates(truncate) {
+        let dates_tr = document.getElementById("dates");
+        let name_header = document.createElement('td');
+        name_header.textContent = "Names";
+        dates_tr.appendChild(name_header);
+    
+        let first_name_keys = Object.keys(users[Object.keys(users)[0]]);
+        for (let i = 0; i < first_name_keys.length; i++) {
+            // Truncate large data sets
+            if (truncate && first_name_keys.length > 8 && i > 1 && i < first_name_keys.length - 2) {
+                if (i == 2) {
+                    let td = document.createElement('td');
+                    td.textContent = '...';
+                    td.addEventListener('click', expand);
+                    dates_tr.appendChild(td);
+                }
+                continue;
+            }
+    
+            let date = document.createElement("td");
+            date.innerText = first_name_keys[i];
+            dates_tr.appendChild(date);
         }
-        // Total Points
-        let point_td = document.createElement('td');
-        point_td.textContent = points;
-        tr.appendChild(point_td);
-
-        // Remove Button
-        add_remove_button(tr);
-        
-        table.appendChild(tr);
+        let total_header = document.createElement('td');
+        total_header.textContent = 'Total Points';
+        dates_tr.appendChild(total_header);
+        let remove_header = document.createElement('td');
+        remove_header.textContent = 'Remove';
+        dates_tr.appendChild(remove_header);
     }
+    setDates(true);
+
+    // Set People
+    function setPeople(truncate) {
+        let keys = Object.keys(users);
+        for (let i = 0; i < keys.length; i++) {
+            let tr = document.createElement('tr');
+            // Name
+            let name_td = document.createElement('td');
+            let name = keys[i];
+            name_td.innerText = name;
+            tr.appendChild(name_td);
+            // Dates
+            let person = users[name]
+            let dates = Object.keys(person);
+            let points = 0;
+            for (let j = 0; j < dates.length; j++) {
+                // Truncate large data sets
+                if (truncate && dates.length > 5 && j > 1 && j < dates.length - 2) {
+                    if (j == 2) {
+                        let td = document.createElement('td');
+                        td.textContent = '...';
+                        td.addEventListener('click', expand);
+                        tr.appendChild(td);
+                    }
+                    continue;
+                }
+
+                let date_td = document.createElement('td');
+
+                // Subtract Button
+                let minus_img = document.createElement('img');
+                minus_img.src = 'minus.png';
+                minus_img.className = 'minus-img';
+                minus_img.addEventListener('click', () => add_points(tr, date_td, dates[j], false));
+                date_td.appendChild(minus_img);
+
+                // Point Value
+                let point = person[dates[j]];
+                points += point;
+                let p = document.createElement('p');
+                p.textContent = point;
+                p.className = 'point-value';
+                date_td.appendChild(p);
+
+                // Add Button
+                let plus_img = document.createElement('img');
+                plus_img.src = 'plus.png';
+                plus_img.className = 'plus-img';
+                plus_img.addEventListener('click', () => add_points(tr, date_td, dates[j], true));
+                date_td.appendChild(plus_img);
+                
+                tr.appendChild(date_td);
+            }
+            // Total Points
+            let point_td = document.createElement('td');
+            point_td.textContent = points;
+            tr.appendChild(point_td);
+
+            // Remove Button
+            add_remove_button(tr);
+            
+            table.appendChild(tr);
+        }
+    }
+    setPeople(true);
 
     // Sort table entries
     sort();
