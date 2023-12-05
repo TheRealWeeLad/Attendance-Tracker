@@ -349,6 +349,7 @@ window.onload = () => {
         table.innerHTML = '<tr id="dates"></tr>';
         setDates(false);
         setPeople(false);
+        sort();
     }
 
     // Set button listeners
@@ -420,6 +421,10 @@ window.onload = () => {
             let dates = Object.keys(person);
             let points = 0;
             for (let j = 0; j < dates.length; j++) {
+                // Point Value
+                let point = person[dates[j]];
+                points += point;
+                
                 // Truncate large data sets
                 if (truncate && dates.length > 5 && j > 1 && j < dates.length - 2) {
                     if (j == 2) {
@@ -440,9 +445,7 @@ window.onload = () => {
                 minus_img.addEventListener('click', () => add_points(tr, date_td, dates[j], false));
                 date_td.appendChild(minus_img);
 
-                // Point Value
-                let point = person[dates[j]];
-                points += point;
+                // Display points
                 let p = document.createElement('p');
                 p.textContent = point;
                 p.className = 'point-value';
